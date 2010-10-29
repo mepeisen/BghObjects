@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+	<package name="ThisLib" type="local">
+		<module name="BghObjects">
+			<title>Object tools</title>
+    		<description>Object tool library</description>
+    		<version>0.0.1</version>
+		</module>
+	</package>
+</project>

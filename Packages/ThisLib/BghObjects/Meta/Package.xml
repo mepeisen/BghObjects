@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<package xmlns="http://typo3.org/ns/2008/flow3/package">
+    <key>BghObjects</key>
+    <title>Object tools</title>
+    <description>Object tool library</description>
+    <version>0.0.1</version>
+    <categories/>
+    <parties>
+        <person role="LeadDeveloper">
+            <name>Martin Eisengardt</name>
+            <email>mep_eisen@web.de</email>
+            <website></website>
+            <organisation></organisation>
+            <repositoryUserName>mepeisen</repositoryUserName>
+        </person>
+    </parties>
+    <constraints>
+        <depends>
+            <package>FLOW3</package>
+        </depends>
+        <conflicts/>
+        <suggests/>
+    </constraints>
+</package>

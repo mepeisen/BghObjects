@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter version="5.0" xml:id="BghObjects.transactional"
+         xmlns="http://docbook.org/ns/docbook"
+         xmlns:ns6="http://www.w3.org/1999/xlink"
+         xmlns:ns5="http://www.w3.org/2000/svg"
+         xmlns:ns4="http://www.w3.org/1999/xhtml"
+         xmlns:ns3="http://www.w3.org/1998/Math/MathML"
+         xmlns:ns="http://docbook.org/ns/docbook">
+  <title>Normal transaction entities</title>
+
+  <para>The normal entities support a simple transaction management. Each object holds
+  a local state of change that may be commited or rolled back. The application itself
+  must ensure that a commit can be confirmed and that dependencies are commited too.</para>
+
+  <section>
+  	<title>Writing simple entities</title>
+  	
+  	<para>To enable simple transaction support your entities will have to extend from
+  	interface <emphasis>\F3\BghObjects\Lib\Model\EntityInterface</emphasis> and implementation
+  	<emphasis>\F3\BghObjects\Lib\Model\Entity</emphasis>.</para>
+  	
+  	<para>Properties will be stored in the class itself similar to non transactional entities.
+  	But they have to following a naming rule. The property <emphasis>foo</emphasis> will be stored
+  	in the variable <emphasis>$this->_foo</emphasis>.</para>
+  	
+  	<para>Access to properties must always be done via methods <emphasis>getProperty</emphasis> and
+  	<emphasis>setProperty</emphasis>.</para>
+  </section>
+
+  <section>
+  	<title>Writing repositories for simple entities</title>
+  	
+  	<para>The repositories support additional features. Your repositories must extend 
+  	interface <emphasis>\F3\BghObjects\Lib\Repository\EntityRepositoryInterface</emphasis> and implementation
+  	<emphasis>\F3\BghObjects\Lib\Repository\EntityRepository</emphasis>.</para>
+  	
+  	<para>The method <emphasis>getObjectName()</emphasis> must be implemented in a correct way.</para>
+  </section>
+
+  <section>
+  	<title>Writing factories</title>
+  	
+  	<para>The constructor of the entity base classes take one argument: the corresponding repository.
+  	Do not think about this yet. We will explain it later.</para>
+  </section>
+
+  <section>
+  	<title>Examples</title>
+  	
+  	<example>
+	  	<title>Sample entity implementation</title>
+  		<programlisting language="php">
+/**
+ * @entity
+ * @scope prototype
+ */
+class MyEntity extends \F3\BghObjects\Lib\Model\Entity
+{
+    /**
+     * @var string
+     */
+    protected $_myVar;
+    
+    /**
+     * @return string
+     */
+    public function getMyVar()
+    {
+        return $this->getProperty('myVar');
+    }
+    
+    /**
+     * @param string $value
+     */
+    public function setMyVar($value)
+    {
+        $this->setProperty('myVar', $value);
+    }
+}
+	  	</programlisting>
+  	</example>
+  	
+  	<example>
+	  	<title>Sample repository implementation</title>
+  		<programlisting language="php">
+/**
+ * @scope singleton
+ */
+class MyEntityRepository extends \F3\BghObjects\Lib\Repository\EntityRepository
+{
+    
+    /**
+     * @var string
+     */
+    protected $objectType = 'my-package\MyEntity';
+    
+    /**
+     * @return string
+     */
+    public function getObjectName()
+    {
+        return '&lt;packages....\MyEntityRepository';
+    }
+    
+}
+	  	</programlisting>
+  	</example>
+  </section>
+  
+  <section>
+  	<title>Using your repository and your entities</title>
+  	
+  	<para>After creating your repository and entity classes, you can use the transaction management. First of
+  	all you need to decide how to set the auto commit flag. What does it mean? The auto commit flag on a
+  	repository declares the behaviour of reloaded or created entity object. The default behaviour is
+  	false. That means every object will not save every change to the database. You might overwrite
+  	this behaviour (property <emphasis>autoCommit</emphasis>) in <emphasis>Objects.yaml</emphasis>
+  	configuration file.</para>
+  	
+  	<para>After setting your <emphasis>autoCommit</emphasis> flag on either the repository or on your single entity object
+  	you can call as many setters as you want.</para>
+  	
+  	<para>After all you can use either <emphasis>commit</emphasis> or <emphasis>rollback</emphasis>.
+  	Both are available on single objects as well as on repositories.</para>
+  	
+  	<note><para>When setting <emphasis>autoCommit</emphasis> to false and doing changes they will be lost at
+  	the end of the script if you do not call <emphasis>commit</emphasis> explicit. So the default behaviour is
+  	to automatically rolling back every entity at the end of the script. However it is not a good design to
+  	rely on this default behaviour. Instead call rollback explicit if you do not want to write the changes to the
+  	database. So every developer sees what is going on there.</para></note>
+  	
+  	<example>
+  		<title>Usage of the transaction management</title>
+  		<programlisting language="php">
+// $repos is your repository object
+$repos->setAutoCommit(true);<co xml:id="co.usagerepos.1" />
+$entity = array_pop($repos->findAll());<co xml:id="co.usagerepos.2" />
+$entity->setFoo('Hello');<co xml:id="co.usagerepos.3" />
+$repos->setAutoCommit(false);<co xml:id="co.usagerepos.4" />
+$entity->setFoo('Hi');<co xml:id="co.usagerepos.5" />
+$repos->rollback();<co xml:id="co.usagerepos.6" />
+	  	</programlisting>
+  	</example>
+  	<calloutlist>
+       	<callout arearefs="co.usagerepos.1">
+       		<para>The <emphasis>autoCommit</emphasis> is set to true meaning that all changes within the
+       		entire repository will automatically becoming persistent.</para>
+       	</callout>
+       	<callout arearefs="co.usagerepos.2">
+       		<para>Now we fetch an entity. Keep in mind that the entity will inherit the <emphasis>autoCommit</emphasis>
+       		flag from the associated repository. That's the reason the entity need to know it's repository
+       		(the constructor gets the repository object).</para>
+      	</callout>
+       	<callout arearefs="co.usagerepos.3">
+       		<para>This setter changes property <emphasis>foo</emphasis>. Because auto commit is true it will
+       		persist this change.</para>
+      	</callout>
+       	<callout arearefs="co.usagerepos.4">
+       		<para>Now we set the <emphasis>autoCommit</emphasis> flag to false for the entire repository.</para>
+      	</callout>
+       	<callout arearefs="co.usagerepos.5">
+       		<para>This change will not be persistent automatically because the <emphasis>autoCommit</emphasis>
+       		is now false.</para>
+      	</callout>
+       	<callout arearefs="co.usagerepos.6">
+       		<para>Rolling back the changes will reset the property <emphasis>foo</emphasis> to the
+       		value <emphasis>Hello</emphasis>. Only the last commited state (in this case the first 
+       		call to <emphasis>setFoo</emphasis>) will become persistent. If you call the method
+       		<emphasis>commit</emphasis> at this position the state will be commited.</para>
+       		
+       		<note>Changing this line to <emphasis>$entity->commit(); $repos->rollback();</emphasis>
+       		will persist the change too and cause the property to hold the value <emphasis>Hi</emphasis>.
+       		In other words: The first commit will be a real commit. Commits do not respect any
+       		additional trollback calls later on.</note>
+      	</callout>
+    </calloutlist>
+  </section>
+</chapter>

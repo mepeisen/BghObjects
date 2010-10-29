@@ -1,0 +1,18 @@
+An extension module for FLOW3.
+
+
+BghObjects provides transaction support for FLOW3 entites.
+See the Documentation at Packages/ThisLib/BghObjects/Documentation for details.
+
+
+Quick setup for eclipse users:
+Variant 1: standalone)
+    Clone git project com_bghosting_flow3_devfwkflow3 to use it.
+    
+Variant 2: as library)
+    Clone directory Packages/ThisLib/BghObjects into your packages directory
+    
+
+Dependencies:
+    FLOW3
+

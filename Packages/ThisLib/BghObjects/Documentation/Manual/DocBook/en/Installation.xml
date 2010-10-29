@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter version="5.0" xml:id="BghObjects.installation"
+         xmlns="http://docbook.org/ns/docbook"
+         xmlns:ns6="http://www.w3.org/1999/xlink"
+         xmlns:ns5="http://www.w3.org/2000/svg"
+         xmlns:ns4="http://www.w3.org/1999/xhtml"
+         xmlns:ns3="http://www.w3.org/1998/Math/MathML"
+         xmlns:ns="http://docbook.org/ns/docbook">
+  <title>Installation</title>
+
+  <para>In this chapter you will find three installation notices. One to cover the
+  installation as a separate package from svn and the second one to install it as
+  part of your project. However the third notice will cover installation via
+  the BGHosting developer tools.</para>
+
+  <section xml:id="BghObjects.installation.requirements">
+    <title>Requirements</title>
+
+    <para>Generally you will need a working FLOW3 itself. Have a look in the FLOW3 manual to see the
+    requirements. You do not need additional packages.</para>
+
+  </section>
+
+  <section xml:id="BghObjects.installation.installationdev">
+    <title>Installation as standalone project (developers of BghObjects)</title>
+
+    <procedure>
+      <step>
+        <para>Use your favorite IDE to checkout the whole project via svn from
+        <link ns6:href="http://srv.bghosting.de/svn/bgh/trunk/org_bghosting_flow3/com_bghosting_flow3_objects">http://srv.bghosting.de/svn/bgh/trunk/org_bghosting_flow3/com_bghosting_flow3_objects</link></para>
+      </step>
+
+      <step>
+        <para>Use the username "anonymous" with an empty password. This will grant read access to the given repository.</para>
+      </step>
+      
+      <step>
+        <para>There is no additional configuration needed.</para>
+      </step>
+    </procedure>
+  </section>
+
+  <section xml:id="BghObjects.installation.installationlib">
+    <title>Installation as library (users of BghObjects)</title>
+
+    <procedure>
+      <step>
+        <para>Create your FLOW3 project as suggested by the FLOW3 manual or the kickstart tutorial.</para>
+      </step>
+
+      <step>
+        <para>Visit the directory <emphasis>Packages</emphasis>. Create a new folder, f.e. <emphasis>BghLib</emphasis>.
+        Within this directory you will now store every BGHosting FLOW3 library.</para>
+      </step>
+      
+      <step>
+        <para>(For SVN users) If your project is already part of a svn repository or if it is planned to stotre it in the
+        svn repository you should now add the folder to the svn (you do need to commit it at this point). Now set the
+        svn property "<emphasis>svn:externals</emphasis>" to "<emphasis>BghObjects   http://srv.bghosting.de/svn/bgh/trunk/org_bghosting_flow3/com_bghosting_flow3_objects/Packages/ThisLib/BghObjects</emphasis>".
+        After doing this you can update the folder Packages and svn will automatically embed the BghObjects package
+        into your project.</para>
+      </step>
+      
+      <step>
+        <para>(For non versioned projects) If your project will not be part of a versioning system you simply have to
+        checkout the code from "<emphasis>http://srv.bghosting.de/svn/bgh/trunk/org_bghosting_flow3/com_bghosting_flow3_objects/Packages/ThisLib/BghObjects</emphasis>".
+        You may receive the library from a prebuilt download and copy it to your packages directory too.</para>
+      </step>
+      
+      <step>
+        <para>There is no additional configuration needed.</para>
+      </step>
+    </procedure>
+  </section>
+  
+  <section xml:id="BghObjects.installation.installationtools">
+    <title>Installation via developer tools (users of BghDevtools)</title>
+
+    <procedure>
+      <step>
+        <para>Create a simple php project in Eclipse.</para>
+      </step>
+      
+      <step>
+        <para>Let the project become part of a svn repository.</para>
+      </step>
+
+      <step>
+        <para>Create a file called <emphasis>project.bgh.xml</emphasis> in the root of your project.
+        <example>
+        	<title>Example of a project configuration file having a depdency to BghObjects</title>
+        	<programlisting language="xml">&lt; ?xml version="1.0" encoding="UTF-8"?>
+&lt;project>
+	&lt;package name="MyPackage" type="local"><co xml:id="co.projectxml.1" />
+		&lt;module name="MyModule">
+			&lt;title>My module title&lt;/title>
+    		&lt;description>My module description&lt;/description>
+    		&lt;version>0.0.1&lt;/version>
+		&lt;/module>
+	&lt;/package>
+	&lt;package name="Dependencies" type="remote"><co xml:id="co.projectxml.2" />
+		&lt;module name="BghObjects">
+			&lt;fs relpath="../com_bghosting_flow3_objects" />
+			&lt;scm type="svn" url="http://srv.bghosting.de/svn/bgh/trunk/org_bghosting_flow3/com_bghosting_flow3_objects" />
+		&lt;/module>
+	&lt;/package>
+&lt;/project>
+        	</programlisting>
+        </example>
+        <calloutlist>
+        	<callout arearefs="co.projectxml.1">
+        		<para>Declaration of the local package (the project itself). We do not explain local packages here.
+        		Of course this should be self explained. For more details have a look at the devtools manual.</para>
+        	</callout>
+        	<callout arearefs="co.projectxml.2">
+        		<para>Declaration of the remote package holding the dependencies. Remote means "not originated in
+        		this project". Devtools will have two possible locations whee to look for the BghObjects project.
+        		It might look within the filesystem. The relative path will be calculated from the project path.
+        		This example fits the needs of eclipse. If it does not find the project there it will checkout
+        		it from given svn repository.</para>
+        	</callout>
+        </calloutlist>
+        </para>
+      </step>
+      
+      <step>
+        <para>Call <emphasis>Tooling.php project generate --xml=path-to-your-project.bgh.xml</emphasis>.</para>
+      </step>
+      
+      <step>
+      	<para>Refresh the whole project in eclipse</para>
+      </step>
+    </procedure>
+    
+    <para>Now you should have a ready-to-use project containing the BghObjects library at the correct position.</para>
+  </section>
+</chapter>

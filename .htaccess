@@ -1,0 +1,5 @@
+SetEnv FLOW3_CONTEXT Development
+SetEnv FLOW3_ROOTPATH ../../com_bghosting_flow3_devfwkflow3
+SetEnv FLOW3_WORKSPACE_ROOT ../..
+SetEnv FLOW3_PROJECT_NAME com_bghosting_flow3_objects
+SetEnv FLOW3_PROJECT_DEPENDENCIES

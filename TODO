@@ -1,0 +1,13 @@
+1) test cases
+2) read/write lock
+3) conflict management
+4) SplObjectStorage and ArrayObject support (currently they are not transactable meaning that they will
+   be only respeected if the setter is called; normally this will cause to call the setter with the
+   previous value:
+   $arr = $entity->getArray();
+   $arr['foo'] = $bar;
+   $entity->setArray($arr);
+5) Persistent transactions may be more flexible:
+   A) store persistence in database (current implementation)
+   B) store persistence in sessions
+   

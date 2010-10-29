@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter version="5.0" xml:id="BghObjects.nontransactional"
+         xmlns="http://docbook.org/ns/docbook"
+         xmlns:ns6="http://www.w3.org/1999/xlink"
+         xmlns:ns5="http://www.w3.org/2000/svg"
+         xmlns:ns4="http://www.w3.org/1999/xhtml"
+         xmlns:ns3="http://www.w3.org/1998/Math/MathML"
+         xmlns:ns="http://docbook.org/ns/docbook">
+  <title>Non transactional entities</title>
+
+  <para>Non transactional entities behave like common FLOW3 entites. Properties are stored directly
+  in the entity object. Although <emphasis>BghObjects</emphasis> supports base classes for non
+  transactional entities you need not use them at all.</para>
+  
+  <para>So why do we provide base classes? It is because of the future. There are some feeatures
+  that we want to embed into those base classes so that you do not have to implement them on your
+  own. Currently there is only one feature: <emphasis>getObjectId()</emphasis>. This feature
+  allowes you to receive the object id of every object.</para>
+  
+  <para>Your interfaces should extend <emphasis>\F3\BghObjects\Lib\Model\SimpleEntityInterface</emphasis>
+  and your implementation classes should extend <emphasis>\F3\BghObjects\Lib\Model\SimpleEntity</emphasis>.</para>
+  
+  <example>
+  	<title>Sample entity implementation</title>
+  	<programlisting language="php">
+/**
+ * @entity
+ * @scope prototype
+ */
+class MyEntity implements \F3\BghObjects\Lib\Model\SimpleEntity
+{
+    /**
+     * @var string
+     */
+    protected $myvar;
+    
+    /**
+     * @return string
+     */
+    public function getMyVar()
+    {
+        return $this->myvar;
+    }
+    
+    /**
+     * @param string $value
+     */
+    public function setMyVar($value)
+    {
+        $this->myvar = $value;
+    }
+}
+  	</programlisting>
+  </example>
+</chapter>

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter version="5.0" xml:id="BghObjects.introduction"
+         xmlns="http://docbook.org/ns/docbook"
+         xmlns:ns6="http://www.w3.org/1999/xlink"
+         xmlns:ns5="http://www.w3.org/2000/svg"
+         xmlns:ns4="http://www.w3.org/1999/xhtml"
+         xmlns:ns3="http://www.w3.org/1998/Math/MathML"
+         xmlns:ns="http://docbook.org/ns/docbook">
+  <title>Introduction</title>
+
+  <para>FLOW3 itself supports persistent objects. However it does not support
+  any direct transaction management. As soon as you need to hold the state
+  of transactions to commit or roll back the changes later BghObjects will help
+  you.</para>
+
+  <para>This reference describes all features of BghObjects and the transaction
+  management. While we are talking of BghObjects you can keep in mind that BghObjects
+  commonly referrs to "entities" introduced by FLOW3.</para>
+
+  <note>
+    <para>Please note that FLOW3 itself is still under heavy development. This causes
+    BghObjects to change frequently. So be aware that the documentation and the implementation
+    may differ. And keep in mind to only use the suggested FLOW3 version along with
+    BghObjects.</para>
+  </note>
+
+  <section xml:id="flow3.introduction.overview">
+    <title>Overview</title>
+
+    <para>BghObjects supports three variants of objects/entities. The FLOW3 framework is
+    composed of the following submodules:</para>
+
+    <itemizedlist>
+      <listitem>
+        <para>The <emphasis>simple</emphasis> entities are common non-transactional
+        entities you already know from FLOW3 itself.</para>
+      </listitem>
+
+      <listitem>
+        <para>The <emphasis>normal</emphasis> entities provide a simple transactional
+        system per object. That means that you are able to commit/rollback changes per object
+        or per repository. However this data is only available during the request. Non commited
+        data will be automatically discarded at the end of the script.</para>
+      </listitem>
+
+      <listitem>
+        <para>The <emphasis>transactional</emphasis> entities provide a full transactional
+        system. Transaction may become even persistent to resume them later. This enables
+        you having unit of works over multiple requests.</para>
+      </listitem>
+    </itemizedlist>
+
+    <para>Each of those variants is described in a separate chapter. You do not need to read
+    every chapter to understand how they work. If you only plan to use the <emphasis>transactional</emphasis>
+    entities you can skip the other chapters.</para>
+    
+    <note><para>You should always choose one strategy that fits your needs. Do you really need transactional
+    support? Keep in mind that using classical non transactional entities will be the fastest way.
+    Using normal entities with small transaction support will be the best compromise. The entire
+    full transactional system will always be the slowest variant. Only choose the full transaction
+    support if your application is working on multiple branches of your data or if you need
+    transactions that are spread over multiple requests.</para></note>
+  </section>
+</chapter>

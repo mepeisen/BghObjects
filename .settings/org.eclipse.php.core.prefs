@@ -1,0 +1,5 @@
+#Mon Oct 25 09:52:51 CEST 2010
+eclipse.preferences.version=1
+include_path=0;/com_bghosting_flow3_objects/Packages/ThisLib/BghObjects/Classes\u00050;/com_bghosting_flow3_objects/Packages/ThisLib/BghObjects/Tests/Unit\u00052;/com_bghosting_flow3_devfwkflow3
+phpVersion=php5.3
+use_asp_tags_as_php=false

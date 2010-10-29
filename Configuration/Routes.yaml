@@ -1,0 +1,32 @@
+#                                                                        #
+# Routes configuration                                                   #
+#                                                                        #
+# This file contains the configuration for the MVC router.               #
+# Just add your own modifications as necessary.                          #
+#                                                                        #
+# Please refer to the FLOW3 manual for possible configuration options.   #
+#                                                                        #
+
+# $Id: Routes.yaml 957 2010-05-28 10:37:53Z robert $
+
+##
+# Testing routes
+#
+-
+  name: 'Testing'
+  uriPattern: 'testing(/{@action})'
+  defaults:
+    '@package': 'Testing'
+    '@controller': 'Standard'
+    '@action': 'index'
+    '@format': 'html'
+
+##
+# BghOpenid subroutes
+
+-
+  name: 'BghDevtools'
+  uriPattern: '<BghDevtoolsSubroutes>'
+  subRoutes:
+    BghDevtoolsSubroutes:
+      package: BghDevtools

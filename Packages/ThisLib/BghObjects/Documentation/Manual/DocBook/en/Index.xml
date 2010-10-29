@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<book version="5.0" xml:id="BghObjects" xmlns="http://docbook.org/ns/docbook"
+      xmlns:xl="http://www.w3.org/1999/xlink"
+      xmlns:xi="http://www.w3.org/2001/XInclude"
+      xmlns:xhtml="http://www.w3.org/1999/xhtml"
+      xmlns:svg="http://www.w3.org/2000/svg"
+      xmlns:ns="http://docbook.org/ns/docbook"
+      xmlns:mathml="http://www.w3.org/1998/Math/MathML">
+  <title>BghObjects library</title>
+
+  <!-- Meta information -->
+
+  <info>
+    <abstract>
+      <para>BghObjects contains useful support for non-transactional and transactional objects.</para>
+    </abstract>
+
+    <author>
+      <personname>
+        <firstname>Martin</firstname>
+        <surname>Eisengardt</surname>
+      </personname>
+
+      <email>mep_eisen@web.de</email>
+    </author>
+
+    <copyright>
+      <year>2010</year>
+      <holder>Martin Eisengardt</holder>
+    </copyright>
+  </info>
+
+  <!-- Chapters -->
+
+  <xi:include href="Introduction.xml" />
+
+  <xi:include href="Installation.xml" />
+
+  <xi:include href="NonTransactional.xml" />
+
+  <xi:include href="Transactional.xml" />
+
+  <xi:include href="FullTransactional.xml" />
+</book>

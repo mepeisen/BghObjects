@@ -1,0 +1,383 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter version="5.0" xml:id="BghObjects.fulltransactional"
+         xmlns="http://docbook.org/ns/docbook"
+         xmlns:ns6="http://www.w3.org/1999/xlink"
+         xmlns:ns5="http://www.w3.org/2000/svg"
+         xmlns:ns4="http://www.w3.org/1999/xhtml"
+         xmlns:ns3="http://www.w3.org/1998/Math/MathML"
+         xmlns:ns="http://docbook.org/ns/docbook">
+  <title>Full transaction entities</title>
+
+  <para>The full transaction support allowes you to use a complete transaction based
+  framework for your data while minimizing the development time. Keep in mind that the
+  transaction framework conatains some overhead in your entities and repositories.
+  Using transactions on huge object trees and under high load may slow down your
+  application.</para>
+  
+  <section>
+    <title>Benefits</title>
+
+    <para>The benefits from this solution:</para>
+
+    <itemizedlist>
+      <listitem>
+        <para>Allowes <emphasis>TransactionParticipant</emphasis> implementors
+        to embed external transaction managers. For example you can embed
+        transactions of external sql databases.</para>
+      </listitem>
+      
+      <listitem>
+        <para>Minimal development time while developing your entities and
+        repositories. Nearly no additional work is needed because nearly
+        everything is realized by base classes and aspects.</para>
+      </listitem>
+
+      <listitem>
+        <para>Optimized interfaces to provide better support for aspects.</para>
+      </listitem>
+      
+      <listitem>
+      	<para>Supports persistent and non persistent transactions. Transactions may be
+      	started in one request and finished in other requests.</para>
+      </listitem>
+      
+      <listitem>
+      	<para>Supports transaction nesting</para>
+      </listitem>
+    </itemizedlist>
+  </section>
+
+  <section>
+  	<title>Theory</title>
+  	
+  	<tip>Transaction processing is designed to maintain a computer system (typically a database or some
+  	modern filesystems) in a known, consistent state, by ensuring that any operations carried out on
+  	the system that are interdependent are either all completed successfully or all canceled successfully.
+  	(copyright <ns6:link ns6:href="http://en.wikipedia.org/wiki/Transaction_processing">Wikipedia</ns6:link>)</tip>
+  	
+  	<para>Seen from FLOW3 database objects (=the entities you already know) transaction processing is aware
+  	of holding different object states. There will be one object state seen from without any transaction, this
+  	is called the trunk state. And for each transaction there may be an individual object state that "overwrites"
+  	some properties of the trunk. Multiple transactions may contain conflicting object states.</para>
+  	
+  	<para><emphasis>BghObjects</emphasis> will devide local transactions from persistent transactions. The
+  	local transactions will be present in memory only. They will be automatically discarded as soon as the
+  	script ends. However it is good application design to either commit or rollback every started local
+  	transaction so that developers see what is going on. Persistent transactions will be stored in the database
+  	for later use. They can be used to store an object state over multiple requests.</para>
+  	
+  	<para>Nesting transactions mean to start a data branch that does not commit to the trunk but to the parent
+  	transaction. Every transaction knows it's parent transaction. Commiting a transaction will cause writing
+  	the entity property changes into the parent transaction.</para>
+  </section>
+
+  <section>
+  	<title>Writing entities</title>
+  	
+  	<para>Your entites will be fairly simple. The interfaces must extend
+  	<emphasis>\F3\BghObjects\Lib\Repository\TransactionalEntityInterface</emphasis> and implementations must
+  	extends <emphasis>\F3\BghObjects\Lib\Repository\TransactionalEntity</emphasis></para>
+  	
+  	<para>The properties must be starting with an underscore. Property must be accessed through
+  	<emphasis>getProperty()</emphasis> and <emphasis>setProperty</emphasis>.</para>
+  </section>
+
+  <section>
+  	<title>Writing repositories</title>
+  	
+  	<para>Thats fairly simple since repositories do not have additional methods or logic to be implemented.
+  	Your repositories must extend interface <emphasis>\F3\BghObjects\Lib\Repository\TransactionalEntityRepositoryInterface</emphasis>
+  	and implementation <emphasis>\F3\BghObjects\Lib\Repository\TransactionalEntityRepository</emphasis>.</para>
+  </section>
+
+  <section>
+  	<title>Writing factories</title>
+  	
+  	<para>You need not take care of anything. Simple create your entity and add it to the repository as you did
+  	before.</para>
+  </section>
+  
+  <section>
+  	<title>Future (planned support) and hints</title>
+  	
+  	<para>TODO</para>
+  </section>
+
+  <section>
+  	<title>Examples</title>
+  	
+  	<example>
+	  	<title>Sample entity implementation</title>
+  		<programlisting language="php">
+/**
+ * @entity
+ * @scope prototype
+ */
+class MyEntity extends \F3\BghObjects\Lib\Model\TransactionalEntity
+{
+    /**
+     * @var string
+     */
+    protected $_myVar;
+    
+    /**
+     * @return string
+     */
+    public function getMyVar()
+    {
+        return $this->getProperty('myVar');
+    }
+    
+    /**
+     * @param string $value
+     */
+    public function setMyVar($value)
+    {
+        $this->setProperty('myVar', $value);
+    }
+}
+	  	</programlisting>
+  	</example>
+  	
+  	<example>
+	  	<title>Sample repository implementation</title>
+  		<programlisting language="php">
+/**
+ * @scope singleton
+ */
+class MyEntityRepository extends \F3\BghObjects\Lib\Repository\TransactionalEntityRepository
+{
+    
+    /**
+     * @var string
+     */
+    protected $objectType = 'my-package\MyEntity';
+    
+    
+}
+	  	</programlisting>
+  	</example>
+  </section>
+  
+  <section>
+  	<title>Using your repository and your entities</title>
+  	
+  	<para>After creating your repository and entity class you can use them the same way as normal entities.
+  	However the main difference is the code that manages your transactions. We do not discuss what code
+  	fragment to manage the transactions. But below you will find some pratical examples how to manage
+  	the transactions. The following example will be a small controller action.</para>
+  	
+  	<example>
+  		<title>managing transactions</title>
+  		<programlisting language="php">
+  		
+/**
+ * the transaction service
+ * @var \F3\BghObjects\Service\TransactionServiceInterface
+ * @inject
+ */
+protected $txService;<co xml:id="co.managetx.1" />
+  		
+/**
+ * the transaction repository
+ * @var \F3\BghObjects\Domain\Repository\TransactionRepositoryInterface
+ * @inject
+ */
+protected $txRepos;<co xml:id="co.managetx.2" />
+
+/**
+ * Sample action
+ */
+public function indexAction()
+{
+    $tx = $this->txService->startTx(null, null, true);<co xml:id="co.managetx.3" />
+    
+    // do some changes
+    $user = ....; // receive an object from somewhere
+    $user->setName('Cpt. Kirk');<co xml:id="co.managetx.4" />
+    
+    // now decide what to do
+    if ($everythingOk)
+    {
+        $tx->commit(); // commit this to database<co xml:id="co.managetx.5" />
+    }
+    else
+    {
+        $tx->rollback(); // let us rollback this<co xml:id="co.managetx.6" />
+    }
+}
+
+/**
+ * Sample action
+ */
+public function fooAction()
+{
+    if (is_object($this->txService->get()))<co xml:id="co.managetx.7" />
+    {
+        $tx = $this->txService->get()->startTx(null, null, true);<co xml:id="co.managetx.8" />
+    }
+    else
+    {
+        $tx = $this->txService->startTx(null, null, true);
+    }
+    
+    // do some changes
+    $user = ....; // receive an object from somewhere
+    $user->setName('Cpt. Kirk');
+    
+    // now decide what to do
+    if ($everythingOk)
+    {
+        $tx->commit(); // commit this to database
+    }
+    else
+    {
+        $tx->rollback(); // let us rollback this
+    }
+}
+
+/**
+ * Sample action
+ */
+public function startAction()
+{
+    $tx = $this->txService->startTx('myService', 'myTxIdentification', false);<co xml:id="co.managetx.9" />
+    
+    // do some changes
+    $user = ....; // receive an object from somewhere
+    $user->setName('Cpt. Kirk');<co xml:id="co.managetx.10" />
+    
+    $this->txService->pause();<co xml:id="co.managetx.11" />
+}
+
+/**
+ * Sample action
+ */
+public function stopAction()
+{
+    $tx = $this->txRepos->findByServiceNameAndName('myService', 'myTxIdentification');<co xml:id="co.managetx.12" />
+    $result = 'Old: '.$user->getName().'&lt;br />';<co xml:id="co.managetx.13" />
+    $this->txService->resume($tx);<co xml:id="co.managetx.14" />
+    
+    // access the object
+    $result .= 'New: '.$user->getName().'&lt;br />';<co xml:id="co.managetx.15" />
+    
+    // rollback
+    $tx->rollback();<co xml:id="co.managetx.16" />
+    $result .= 'Resulting: '.$user->getName().'&lt;br />';<co xml:id="co.managetx.17" />
+    
+    return $result;
+}
+	  	</programlisting>
+  	</example>
+  	<calloutlist>
+       	<callout arearefs="co.managetx.1">
+       		<para>The <emphasis>TransactionService</emphasis> manages the transactions and is responsible to
+       		create new transactions for the code managing transactions. It is used as both, a factory and a
+       		service.</para>
+       	</callout>
+       	<callout arearefs="co.managetx.2">
+       		<para>The <emphasis>TransactionRepository</emphasis> allowes access to persistent transactions.</para>
+      	</callout>
+       	<callout arearefs="co.managetx.3">
+       		<para>This code starts an anonymous local (=non-persistent) transaction. The transaction becomes the
+       		current active transaction. Every change made to transactional entites will be stored in this
+       		new transaction.</para>
+      	</callout>
+       	<callout arearefs="co.managetx.4">
+       		<para>The setter forces a property to change. Remember that every property change will be associated
+       		with the active transaction.</para>
+      	</callout>
+       	<callout arearefs="co.managetx.5">
+       		<para>The transaction is commited meaning that the changed property will be stored in the trunk state
+       		of the object.</para>
+       		<note>The transaction is not longer active or usable.</note>
+      	</callout>
+       	<callout arearefs="co.managetx.6">
+       		<para>The transaction is rolled back. The trunk state of the object is unchanged and the changes are
+       		lost.</para>
+       		<note>The transaction is not longer active or usable.</note>
+      	</callout>
+      	<callout arearefs="co.managetx.7">
+       		<para>This code first checks if there is already an active transaction. If there is no active
+       		transaction the following code is identical to <emphasis>indexAction</emphasis></para>
+      	</callout>
+      	<callout arearefs="co.managetx.8">
+       		<para>A child transaction is started and persistet. That results in a significant change in behaviour.
+       		The commit method will not commit the changes to the trunk state of the object. But it will commit
+       		the changes to the parent transaction.</para>
+      	</callout>
+      	<callout arearefs="co.managetx.9">
+       		<para>This code fragment starts a named transaction. The transaction service-name/name pair must be
+       		unique. The transaction is persistent so that it will be usable in another action.</para>
+      	</callout>
+      	<callout arearefs="co.managetx.10">
+       		<para>As in all actions the method <emphasis>setName</emphasis> will change a property within the active
+       		transaction.</para>
+      	</callout>
+      	<callout arearefs="co.managetx.11">
+       		<para>Pausing this transaction causes the transactions to be removed. The previous transaction
+       		will become active (as long as there was one).</para>
+       		
+       		<note>You need not pause the transaction by yourself at the end of your action. It will be automatically
+       		be paused. But it is good application design to add this method call here. On the one hand every
+       		developer now sees what is going on. On the other hand your code is now compatible with action chains.
+       		Multiple actions called in chain and each using their own transactions will become compatible. Without
+       		pausing your transaction the next action of an action chain would see the transaction you created
+       		and may behave wrong.</note>
+      	</callout>
+      	<callout arearefs="co.managetx.12">
+       		<para>The transaction previsouly paused will be fetched.</para>
+      	</callout>
+      	<callout arearefs="co.managetx.13">
+       		<para>As there is no active transaction the <emphasis>getName()</emphasis> method will access
+       		the trunk state of the object. It won't see the changes done in <emphasis>startAction()</emphasis>.</para>
+      	</callout>
+      	<callout arearefs="co.managetx.14">
+       		<para>The transaction will be resumed. That means it will becoming the active transaction.</para>
+      	</callout>
+      	<callout arearefs="co.managetx.15">
+       		<para>Because you resumed the persistent transaction this will cause the <emphasis>getName()</emphasis>
+       		method to see the changes again. It will return <emphasis>Cpt. Kirk</emphasis>.</para>
+      	</callout>
+      	<callout arearefs="co.managetx.16">
+       		<para>Rolls back the changes. It should be self explained what is going on here.</para>
+      	</callout>
+      	<callout arearefs="co.managetx.17">
+       		<para>You should already know what the code will do at this line. It will see the trunk object
+       		state again because there is no active transaction after rolling back or commiting. Because of
+       		the roll back the changed property is lost and it will return the previous line.</para>
+      	</callout>
+    </calloutlist>
+  </section>
+  
+  <section>
+  	<title>Future and hints</title>
+  	
+  	<itemizedlist>
+      <listitem>
+        <para>By implementing the interface <emphasis>\F3\BghObjects\Domain\Model\TransactionParticipantInterface</emphasis>
+        and registring an object at the transaction you can integrate an external transaction system (f.e.
+        a classic sql database).</para>
+      </listitem>
+
+      <listitem>
+        <para>Currently it is not possible to use read/write locks. Changes that will be made to multiple
+        transactions may be conflicting. At least the order the transactions will be commited is currently
+        important. The later transaction may be overwriting changes a previous transaction made. In future
+        versions there will be read/write lock support and conflict management.</para>
+      </listitem>
+
+      <listitem>
+        <para>Looking at the implementation of the methods <emphasis>getProperty</emphasis> and
+        <emphasis>setProperty</emphasis> may be confusing. We use AOP to realize the transaction
+        management on entities. Have a look at the <emphasis>TransactionalEntityAspect</emphasis>
+        to see the concrete implementation for entities.</para>
+        
+        <para>In future versions we want to integrate a configuration to embed transaction management
+        into existing entity classes. So it will be possible to use entities of modules that did not
+        use transactions within your transactional code.</para>
+      </listitem>
+    </itemizedlist>
+  </section>
+</chapter>
