@@ -1,0 +1,6 @@
+/Logs/**
+!/Logs/.do_not_delete_this
+/Persistent/EncryptionKey
+/Persistent/Objects.db
+/Temporary/**
+!/Temporary/.do_not_delete_this
