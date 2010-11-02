@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project>
-	<package name="ThisLib" type="local">
+	<package generate="true" name="ThisLib" type="local">
 		<module name="BghObjects">
 			<title>Object tools</title>
     		<description>Object tool library</description>
