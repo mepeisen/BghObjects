@@ -322,6 +322,9 @@ class PersistentTransactionTest extends \F3\Testing\BaseTestCase
 	    $txChild = $this->getAccessibleMock('F3\BghObjects\Domain\Model\PersistentTransaction', array('dummy'), array('childServiceName', 'childName'));
 	    	    
 	    $txRepMock = $this->getMock('F3\BghObjects\Domain\Repository\TransactionRepositoryInterface');
+	    $qresMock = $this->getMock('F3\FLOW3\Persistence\QueryResultInterface');
+	    $qresMock->expects($this->once())->method('count')->will($this->returnValue(0));
+	    $txRepMock->expects($this->once())->method('findByServiceNameAndName')->with('childServiceName', 'childName')->will($this->returnValue($qresMock));
 	    $tx->_set('txRepository', $txRepMock);
 	    $txChild->_set('txRepository', $txRepMock);
 	    
@@ -354,6 +357,9 @@ class PersistentTransactionTest extends \F3\Testing\BaseTestCase
 	    $txChild->_set('FLOW3_Persistence_Entity_UUID', 'child');
 	    	    	    
 	    $txRepMock = $this->getMock('F3\BghObjects\Domain\Repository\TransactionRepositoryInterface');
+	    $qresMock = $this->getMock('F3\FLOW3\Persistence\QueryResultInterface');
+	    $qresMock->expects($this->once())->method('count')->will($this->returnValue(0));
+	    $txRepMock->expects($this->once())->method('findByServiceNameAndName')->with('childServiceName', 'childName')->will($this->returnValue($qresMock));
 	    $tx->_set('txRepository', $txRepMock);
 	    $txChild->_set('txRepository', $txRepMock);
 	    
@@ -383,6 +389,9 @@ class PersistentTransactionTest extends \F3\Testing\BaseTestCase
 	    $txChild->_set('FLOW3_Persistence_Entity_UUID', 'child');
 	    	    	    	    
 	    $txRepMock = $this->getMock('F3\BghObjects\Domain\Repository\TransactionRepositoryInterface');
+	    $qresMock = $this->getMock('F3\FLOW3\Persistence\QueryResultInterface');
+	    $qresMock->expects($this->once())->method('count')->will($this->returnValue(0));
+	    $txRepMock->expects($this->once())->method('findByServiceNameAndName')->with('childServiceName', 'childName')->will($this->returnValue($qresMock));
 	    $tx->_set('txRepository', $txRepMock);
 	    $txChild->_set('txRepository', $txRepMock);
 	    
@@ -412,6 +421,9 @@ class PersistentTransactionTest extends \F3\Testing\BaseTestCase
 	    $txChild->_set('FLOW3_Persistence_Entity_UUID', 'parent');
 	    	    	    	    
 	    $txRepMock = $this->getMock('F3\BghObjects\Domain\Repository\TransactionRepositoryInterface');
+	    $qresMock = $this->getMock('F3\FLOW3\Persistence\QueryResultInterface');
+	    $qresMock->expects($this->once())->method('count')->will($this->returnValue(0));
+	    $txRepMock->expects($this->once())->method('findByServiceNameAndName')->with('childServiceName', 'childName')->will($this->returnValue($qresMock));
 	    $tx->_set('txRepository', $txRepMock);
 	    $txChild->_set('txRepository', $txRepMock);
 	    
@@ -445,6 +457,9 @@ class PersistentTransactionTest extends \F3\Testing\BaseTestCase
 	    $txChild->expects($this->once())->method('commit')->will($this->throwException($ex));
 	    	    	    	    
 	    $txRepMock = $this->getMock('F3\BghObjects\Domain\Repository\TransactionRepositoryInterface');
+	    $qresMock = $this->getMock('F3\FLOW3\Persistence\QueryResultInterface');
+	    $qresMock->expects($this->once())->method('count')->will($this->returnValue(0));
+	    $txRepMock->expects($this->once())->method('findByServiceNameAndName')->with('childServiceName', 'childName')->will($this->returnValue($qresMock));
 	    $tx->_set('txRepository', $txRepMock);
 	    
 	    $omMock = $this->getMock('F3\FLOW3\Object\ObjectManagerInterface');
@@ -476,6 +491,9 @@ class PersistentTransactionTest extends \F3\Testing\BaseTestCase
 	    $txChild->expects($this->once())->method('rollback')->will($this->throwException($ex));
 	    	    	    	    
 	    $txRepMock = $this->getMock('F3\BghObjects\Domain\Repository\TransactionRepositoryInterface');
+	    $qresMock = $this->getMock('F3\FLOW3\Persistence\QueryResultInterface');
+	    $qresMock->expects($this->once())->method('count')->will($this->returnValue(0));
+	    $txRepMock->expects($this->once())->method('findByServiceNameAndName')->with('childServiceName', 'childName')->will($this->returnValue($qresMock));
 	    $tx->_set('txRepository', $txRepMock);
 	    
 	    $omMock = $this->getMock('F3\FLOW3\Object\ObjectManagerInterface');
@@ -505,6 +523,9 @@ class PersistentTransactionTest extends \F3\Testing\BaseTestCase
 	    $tx->_set('objectManager', $omMock);
 	    	    	    	    
 	    $txRepMock = $this->getMock('F3\BghObjects\Domain\Repository\TransactionRepositoryInterface');
+	    $qresMock = $this->getMock('F3\FLOW3\Persistence\QueryResultInterface');
+	    $qresMock->expects($this->once())->method('count')->will($this->returnValue(0));
+	    $txRepMock->expects($this->once())->method('findByServiceNameAndName')->with('childServiceName', 'childName')->will($this->returnValue($qresMock));
 	    $tx->_set('txRepository', $txRepMock);
 	    
 	    $txsMock = $this->getMock('F3\BghObjects\Service\TransactionServiceInterface');
@@ -532,6 +553,9 @@ class PersistentTransactionTest extends \F3\Testing\BaseTestCase
 	    $tx->_set('objectManager', $omMock);
 	    	    	    	    
 	    $txRepMock = $this->getMock('F3\BghObjects\Domain\Repository\TransactionRepositoryInterface');
+	    $qresMock = $this->getMock('F3\FLOW3\Persistence\QueryResultInterface');
+	    $qresMock->expects($this->once())->method('count')->will($this->returnValue(0));
+	    $txRepMock->expects($this->once())->method('findByServiceNameAndName')->with('childServiceName', 'childName')->will($this->returnValue($qresMock));
 	    $tx->_set('txRepository', $txRepMock);
 	    $tx2->_set('txRepository', $txRepMock);
 	    
@@ -558,6 +582,9 @@ class PersistentTransactionTest extends \F3\Testing\BaseTestCase
 	    $tx->_set('objectManager', $omMock);
 	    	    	    	    
 	    $txRepMock = $this->getMock('F3\BghObjects\Domain\Repository\TransactionRepositoryInterface');
+	    $qresMock = $this->getMock('F3\FLOW3\Persistence\QueryResultInterface');
+	    $qresMock->expects($this->once())->method('count')->will($this->returnValue(0));
+	    $txRepMock->expects($this->once())->method('findByServiceNameAndName')->with('childServiceName', 'childName')->will($this->returnValue($qresMock));
 	    $tx->_set('txRepository', $txRepMock);
 	    $txChild->_set('txRepository', $txRepMock);
 	    
@@ -588,6 +615,9 @@ class PersistentTransactionTest extends \F3\Testing\BaseTestCase
 	    $tx->_set('objectManager', $omMock);
 	    	    	    	    
 	    $txRepMock = $this->getMock('F3\BghObjects\Domain\Repository\TransactionRepositoryInterface');
+	    $qresMock = $this->getMock('F3\FLOW3\Persistence\QueryResultInterface');
+	    $qresMock->expects($this->once())->method('count')->will($this->returnValue(0));
+	    $txRepMock->expects($this->once())->method('findByServiceNameAndName')->with('childServiceName', 'childName')->will($this->returnValue($qresMock));
 	    $tx->_set('txRepository', $txRepMock);
 	    $txChild->_set('txRepository', $txRepMock);
 	    
@@ -618,6 +648,9 @@ class PersistentTransactionTest extends \F3\Testing\BaseTestCase
 	    $tx->_set('objectManager', $omMock);
 	    	    	    	    
 	    $txRepMock = $this->getMock('F3\BghObjects\Domain\Repository\TransactionRepositoryInterface');
+	    $qresMock = $this->getMock('F3\FLOW3\Persistence\QueryResultInterface');
+	    $qresMock->expects($this->once())->method('count')->will($this->returnValue(0));
+	    $txRepMock->expects($this->once())->method('findByServiceNameAndName')->with('childServiceName', 'childName')->will($this->returnValue($qresMock));
 	    $tx->_set('txRepository', $txRepMock);
 	    $txChild->_set('txRepository', $txRepMock);
 	    
@@ -727,6 +760,9 @@ class PersistentTransactionTest extends \F3\Testing\BaseTestCase
 	    $txChild->_set('txService', $txsMock);
 	    	    	    	    
 	    $txRepMock = $this->getMock('F3\BghObjects\Domain\Repository\TransactionRepositoryInterface');
+	    $qresMock = $this->getMock('F3\FLOW3\Persistence\QueryResultInterface');
+	    $qresMock->expects($this->once())->method('count')->will($this->returnValue(0));
+	    $txRepMock->expects($this->once())->method('findByServiceNameAndName')->with('childServiceName', 'childName')->will($this->returnValue($qresMock));
 	    $tx->_set('txRepository', $txRepMock);
 	    $txChild->_set('txRepository', $txRepMock);
 	    
@@ -936,6 +972,9 @@ class PersistentTransactionTest extends \F3\Testing\BaseTestCase
 	    $txChild->_set('txService', $txsMock);
 	    	    	    	    
 	    $txRepMock = $this->getMock('F3\BghObjects\Domain\Repository\TransactionRepositoryInterface');
+	    $qresMock = $this->getMock('F3\FLOW3\Persistence\QueryResultInterface');
+	    $qresMock->expects($this->once())->method('count')->will($this->returnValue(0));
+	    $txRepMock->expects($this->once())->method('findByServiceNameAndName')->with('childServiceName', 'childName')->will($this->returnValue($qresMock));
 	    $tx->_set('txRepository', $txRepMock);
 	    $txChild->_set('txRepository', $txRepMock);
 	    $txRepMock->expects($this->once())->method('add')->with($txChild);
@@ -1015,7 +1054,9 @@ class PersistentTransactionTest extends \F3\Testing\BaseTestCase
 	    
 	    $txRepMock = $this->getMock('F3\BghObjects\Domain\Repository\TransactionRepositoryInterface');
 	    $tx->_set('txRepository', $txRepMock);
-	    $txRepMock->expects($this->once())->method('findByServiceNameAndName')->with('serviceName', 'name')->will($this->returnValue($tx));
+	    $qresMock = $this->getMock('F3\FLOW3\Persistence\QueryResultInterface');
+	    $qresMock->expects($this->once())->method('count')->will($this->returnValue(1));
+	    $txRepMock->expects($this->once())->method('findByServiceNameAndName')->with('serviceName', 'name')->will($this->returnValue($qresMock));
 	    
 	    $tx->startTx('serviceName', 'name', false);
 	}

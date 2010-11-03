@@ -163,6 +163,9 @@ class TransactionServiceTest extends \F3\Testing\BaseTestCase
 	    $omMock->expects($this->once())->method('create')->with('F3\BghObjects\Domain\Model\PersistentTransaction', 'serviceName', 'name', null)->will($this->returnValue($tx));
 	    $service->_set('objectManager', $omMock);
 	    $txRepMock = $this->getMock('F3\BghObjects\Domain\Repository\TransactionRepositoryInterface');
+	    $qresMock = $this->getMock('F3\FLOW3\Persistence\QueryResultInterface');
+	    $qresMock->expects($this->once())->method('count')->will($this->returnValue(0));
+	    $txRepMock->expects($this->once())->method('findByServiceNameAndName')->with('serviceName', 'name')->will($this->returnValue($qresMock));
 	    $txRepMock->expects($this->once())->method('add')->with($tx);
 	    $service->_set('txRepository', $txRepMock);
 	    self::assertSame($tx, $service->startTx('serviceName', 'name', false));
@@ -182,7 +185,9 @@ class TransactionServiceTest extends \F3\Testing\BaseTestCase
 	    $service->_set('objectManager', $omMock);
 	    $txRepMock = $this->getMock('F3\BghObjects\Domain\Repository\TransactionRepositoryInterface');
 	    $txRepMock->expects($this->never())->method('add');
-	    $txRepMock->expects($this->once())->method('findByServiceNameAndName')->with('serviceName', 'name')->will($this->returnValue($tx));
+	    $qresMock = $this->getMock('F3\FLOW3\Persistence\QueryResultInterface');
+	    $qresMock->expects($this->once())->method('count')->will($this->returnValue(1));
+	    $txRepMock->expects($this->once())->method('findByServiceNameAndName')->with('serviceName', 'name')->will($this->returnValue($qresMock));
 	    $service->_set('txRepository', $txRepMock);
 	    $service->startTx('serviceName', 'name', false);
 	}
