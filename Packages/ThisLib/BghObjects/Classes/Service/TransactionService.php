@@ -124,7 +124,7 @@ class TransactionService implements \F3\BghObjects\Service\TransactionServiceInt
             if ($serviceName != null && $name != null)
             {
                 $cur = $this->txRepository->findByServiceNameAndName($serviceName, $name);
-                if (is_object($cur))
+                if ($cur->count() > 0)
                 {
                     throw new \F3\BghObjects\Domain\TransactionConflictException('Duplicate transaction name: '.$serviceName.'/'.$name, 1287477191);
                 }
