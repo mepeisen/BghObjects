@@ -21,5 +21,17 @@ FLOW3:
     errorHandler:
       exceptionalErrors: [%E_USER_ERROR%, %E_RECOVERABLE_ERROR%, %E_WARNING%, %E_NOTICE%, %E_USER_WARNING%, %E_USER_NOTICE%, %E_STRICT%]
     
-    security:
-      enable: yes
+  security:
+    enable: yes
+
+  monitor:
+    detectClassChanges: y
+
+  resource:
+    publishing:
+      detectPackageResourceChanges: y
+
+  log:
+    systemLogger:
+      backendOptions: { logFileURL: %FLOW3_PATH_DATA%Logs/%FLOW3_SAPITYPE%/FLOW3_Testing.log, createParentDirectories: y, severityThreshold: %LOG_DEBUG% }
+      

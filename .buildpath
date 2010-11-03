@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <buildpath>
 	<buildpathentry kind="con" path="org.eclipse.php.core.LANGUAGE"/>
-	<buildpathentry kind="src" path="Packages/ThisLib/BghObjects/Tests/Unit"/>
+	<buildpathentry kind="src" path="Packages/ThisLib/BghObjects/Tests"/>
 	<buildpathentry kind="src" path="Packages/ThisLib/BghObjects/Classes"/>
 	<buildpathentry combineaccessrules="false" kind="prj" path="/com_bghosting_flow3_devfwkflow3"/>
 </buildpath>
