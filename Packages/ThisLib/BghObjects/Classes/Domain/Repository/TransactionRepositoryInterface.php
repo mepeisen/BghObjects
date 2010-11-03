@@ -36,14 +36,14 @@ interface TransactionRepositoryInterface extends \F3\FLOW3\Persistence\Repositor
      * @param string $serviceName
      * @param string $name
      * 
-     * @return \F3\BghObjects\Domain\Model\TransactionInterface the transaction object or null if it was not found
+     * @return \F3\FLOW3\Persistence\QueryResultInterface the query result
      */
     public function findByServiceNameAndName($serviceName, $name);
     
     /**
      * Finds all anonymous transactions
      * 
-     * @return array(\F3\BghObjects\Domain\Model\TransactionInterface)
+     * @return \F3\FLOW3\Persistence\QueryResultInterface the query result
      */
     public function findAllAnonymous();
     

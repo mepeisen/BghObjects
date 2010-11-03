@@ -43,31 +43,25 @@ class TransactionRepository extends \F3\FLOW3\Persistence\Repository implements 
      * @param string $serviceName
      * @param string $name
      * 
-     * @return \F3\BghObjects\Domain\Model\TransactionInterface the transaction object or null if it was not found
+     * @return \F3\FLOW3\Persistence\QueryResultInterface the query result
      */
     public function findByServiceNameAndName($serviceName, $name)
     {
         $query = $this->createQuery();
         $query->matching($query->logicalAnd(array($query->equals('serviceName', $serviceName), $query->equals('name', $name))));
-        $res = $query->execute();
-        if (count($res) > 0)
-        {
-            return array_pop($res);
-        }
-        return null;
+        return $query->execute();
     }
     
     /**
      * Finds all anonymous transactions
      * 
-     * @return array(\F3\BghObjects\Domain\Model\TransactionInterface)
+     * @return \F3\FLOW3\Persistence\QueryResultInterface the query result
      */
     public function findAllAnonymous()
     {
         $query = $this->createQuery();
         $query->matching($query->logicalOr(array($query->equals('serviceName', null), $query->equals('name', null))));
-        $res = $query->execute();
-        return $res;
+        return $query->execute();
     }
     
 }
