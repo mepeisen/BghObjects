@@ -93,6 +93,15 @@ class LocalTransaction implements \F3\BghObjects\Domain\Model\TransactionInterfa
     protected $participants = array();
     
     /**
+     * The spl storage to holde the entity objects
+     * @var \SplObjectStorage
+     * @todo should be introduced by TransactionalEntityAspect as soon as FLOW3 supports introducing variables;
+     *       currently we need to store this property in this class so that the persistence sees it and persists
+     *       it.
+     */
+    protected $BghObjects_entities = null;
+    
+    /**
      * Constructor
      * 
      * @param string                                           $serviceName
