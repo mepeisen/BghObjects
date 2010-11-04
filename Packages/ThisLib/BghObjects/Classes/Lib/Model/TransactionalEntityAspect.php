@@ -29,9 +29,9 @@ namespace F3\BghObjects\Lib\Model;
  * @aspect
  * 
  * @todo introduce variables:
- *           TransactionEntity->_BghObjects_transactionData_persistent
- *           TransactionEntity->_BghObjects_transactionData_local
- *           Transaction->_BghObjects_entities
+ *           TransactionEntity->BghObjects_transactionData_persistent
+ *           TransactionEntity->BghObjects_transactionData_local
+ *           Transaction->BghObjects_entities
  */
 class TransactionalEntityAspect
 {
@@ -119,7 +119,7 @@ class TransactionalEntityAspect
      */
     public function onPerformCommit(\F3\FLOW3\AOP\JoinPointInterface $joinPoint)
     {
-        $entities = $joinPoint->getProxy()->FLOW3_AOP_Proxy_getProperty('_BghObjects_entities');
+        $entities = $joinPoint->getProxy()->FLOW3_AOP_Proxy_getProperty('BghObjects_entities');
         if (is_object($entities))
         {
             /* @var $entities \SplObjectStorage */
@@ -130,7 +130,7 @@ class TransactionalEntityAspect
                 $entities->next();
                 if ($val instanceof \F3\FLOW3\AOP\ProxyInterface && $val instanceof \F3\BghObjects\Lib\Model\TransactionalEntity)
                 {
-                    $txdata = $val->FLOW3_AOP_Proxy_getProperty($joinPoint->getProxy()->isLocal() ? '_BghObjects_transactionData_local' : '_BghObjects_transactionData_global');
+                    $txdata = $val->FLOW3_AOP_Proxy_getProperty($joinPoint->getProxy()->isLocal() ? 'BghObjects_transactionData_local' : 'BghObjects_transactionData_global');
                     $txid = $joinPoint->getProxy()->getObjectId();
                     if (is_object($txdata) && isset($txdata[$txid]))
                     {
@@ -181,7 +181,7 @@ class TransactionalEntityAspect
      */
     public function onPerformRollback(\F3\FLOW3\AOP\JoinPointInterface $joinPoint)
     {
-        $entities = $joinPoint->getProxy()->FLOW3_AOP_Proxy_getProperty('_BghObjects_entities');
+        $entities = $joinPoint->getProxy()->FLOW3_AOP_Proxy_getProperty('BghObjects_entities');
         if (is_object($entities))
         {
             /* @var $entities \SplObjectStorage */
@@ -192,7 +192,7 @@ class TransactionalEntityAspect
                 $entities->next();
                 if ($val instanceof \F3\FLOW3\AOP\ProxyInterface && $val instanceof \F3\BghObjects\Lib\Model\TransactionalEntity)
                 {
-                    $txdata = $val->FLOW3_AOP_Proxy_getProperty($joinPoint->getProxy()->isLocal() ? '_BghObjects_transactionData_local' : '_BghObjects_transactionData_global');
+                    $txdata = $val->FLOW3_AOP_Proxy_getProperty($joinPoint->getProxy()->isLocal() ? 'BghObjects_transactionData_local' : 'BghObjects_transactionData_global');
                     $txid = $joinPoint->getProxy()->getObjectId();
                     if (is_object($txdata) && isset($txdata[$txid]))
                     {
@@ -217,7 +217,7 @@ class TransactionalEntityAspect
      */
     public function onDestroy(\F3\FLOW3\AOP\JoinPointInterface $joinPoint)
     {
-        $entities = $joinPoint->getProxy()->FLOW3_AOP_Proxy_getProperty('_BghObjects_entities');
+        $entities = $joinPoint->getProxy()->FLOW3_AOP_Proxy_getProperty('BghObjects_entities');
         if (is_object($entities))
         {
             /* @var $entities \SplObjectStorage */
@@ -228,7 +228,7 @@ class TransactionalEntityAspect
                 $entities->next();
                 if ($val instanceof \F3\FLOW3\AOP\ProxyInterface && $val instanceof \F3\BghObjects\Lib\Model\TransactionalEntity)
                 {
-                    $txdata = $val->FLOW3_AOP_Proxy_getProperty($joinPoint->getProxy()->isLocal() ? '_BghObjects_transactionData_local' : '_BghObjects_transactionData_global');
+                    $txdata = $val->FLOW3_AOP_Proxy_getProperty($joinPoint->getProxy()->isLocal() ? 'BghObjects_transactionData_local' : 'BghObjects_transactionData_global');
                     $txid = $joinPoint->getProxy()->getObjectId();
                     if (is_object($txdata) && isset($txdata[$txid]))
                     {
@@ -261,7 +261,7 @@ class TransactionalEntityAspect
             while (is_object($tx))
             {
                 $txid = $tx->getObjectId();
-                $txdata = $entity->FLOW3_AOP_Proxy_getProperty($tx->isLocal() ? '_BghObjects_transactionData_local' : '_BghObjects_transactionData_global');
+                $txdata = $entity->FLOW3_AOP_Proxy_getProperty($tx->isLocal() ? 'BghObjects_transactionData_local' : 'BghObjects_transactionData_global');
                 if (is_object($txdata) && isset($txdata[$txid]) && isset($txdata[$txid][$key]))
                 {
                     return $txdata[$txid][$key];
@@ -291,17 +291,17 @@ class TransactionalEntityAspect
             $val = array_pop($args);
             $entity = $joinPoint->getProxy();
             $txid = $tx->getObjectId();
-            $txprop = $tx->isLocal() ? '_BghObjects_transactionData_local' : '_BghObjects_transactionData_global';
+            $txprop = $tx->isLocal() ? 'BghObjects_transactionData_local' : 'BghObjects_transactionData_global';
             $txdata = $entity->FLOW3_AOP_Proxy_getProperty($txprop);
             if (!is_object($txdata))
             {
                 $txdata = new \ArrayObject();
                 $entity->FLOW3_AOP_Proxy_setProperty($txprop, $txdata);
-                $entities = $tx->FLOW3_AOP_Proxy_getProperty('_BghObjects_entities');
+                $entities = $tx->FLOW3_AOP_Proxy_getProperty('BghObjects_entities');
                 if (!is_object($entities))
                 {
                     $entities = new \SplObjectStorage();
-                    $tx->FLOW3_AOP_Proxy_setProperty('_BghObjects_entities', $entities);
+                    $tx->FLOW3_AOP_Proxy_setProperty('BghObjects_entities', $entities);
                 }
                 $entities->attach($entity);
             }

@@ -39,7 +39,7 @@ class TransactionalEntity extends \F3\BghObjects\Lib\Model\SimpleEntity implemen
      *       currently we need to store this property in this class so that the persistence sees it and persists
      *       it.
      */
-    protected $_BghObjects_transactionData_persistent;
+    protected $BghObjects_transactionData_persistent;
     
     /**
      * The local transaction data
@@ -49,7 +49,7 @@ class TransactionalEntity extends \F3\BghObjects\Lib\Model\SimpleEntity implemen
      *       currently we need to store this property in this class so that the persistence sees it and persists
      *       it.
      */
-    protected $_BghObjects_transactionData_local;
+    protected $BghObjects_transactionData_local;
     
 	/**
      * Returns the property value

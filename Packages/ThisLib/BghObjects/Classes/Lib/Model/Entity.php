@@ -37,14 +37,14 @@ class Entity extends \F3\BghObjects\Lib\Model\SimpleEntity implements \F3\BghObj
      * @var array
      * @transient
      */
-    protected $_uncommitedBean = false;
+    protected $uncommitedBean = false;
     
     /**
      * true if this entity has autoCommit enabled
      * @var boolean
      * @transient
      */
-    protected $_autoCommit = false;
+    protected $autoCommit = false;
     
     
     
@@ -53,19 +53,19 @@ class Entity extends \F3\BghObjects\Lib\Model\SimpleEntity implements \F3\BghObj
      * @inject
      * @transient
      */
-    protected $_objectManager;
+    protected $objectManager;
     
     
     
     /**
      * @var string
      */
-    protected $_repositoryClassName;
+    protected $repositoryClassName;
     
     /**
      * @var \F3\BghObjects\Lib\Repository\EntityRepositoryInterface
      */
-    protected $_repository;
+    protected $repository;
     
     
     
@@ -76,19 +76,9 @@ class Entity extends \F3\BghObjects\Lib\Model\SimpleEntity implements \F3\BghObj
      */
     public function __construct(\F3\BghObjects\Lib\Repository\EntityRepositoryInterface $repos)
     {
-        $this->_repository = $repos;
-        $this->_repositoryClassName = $repos->getObjectName();
-        $this->_autoCommit = $repos->isAutoCommit();
-    }
-    
-    /**
-     * Returns the unique object id of this bean
-     * 
-     * @return string
-     */
-    public function getObjectId()
-    {
-        return $this->_entityId;
+        $this->repository = $repos;
+        $this->repositoryClassName = $repos->getObjectName();
+        $this->autoCommit = $repos->isAutoCommit();
     }
     
     /**
@@ -96,10 +86,10 @@ class Entity extends \F3\BghObjects\Lib\Model\SimpleEntity implements \F3\BghObj
      */
     public function __wakeup()
     {
-        if (!is_object($this->_repository))
+        if (!is_object($this->repository))
         {
-            $this->_repository = $this->_objectManager->get($this->_repositoryClassName);
-            $this->_autoCommit = $this->_repository->isAutoCommit();
+            $this->repository = $this->objectManager->get($this->repositoryClassName);
+            $this->autoCommit = $this->repository->isAutoCommit();
         }
     }
     
@@ -114,9 +104,9 @@ class Entity extends \F3\BghObjects\Lib\Model\SimpleEntity implements \F3\BghObj
     {
         if (!$this->isAutoCommit())
         {
-            if (is_array($this->_uncommitedBean))
+            if (is_array($this->uncommitedBean) && isset($this->uncommitedBean[$name]))
             {
-                return isset($this->_uncommitedBean[$name]) ? $this->_uncommitedBean[$name] : null;
+                return $this->uncommitedBean[$name];
             }
         }
         $name = "_$name";
@@ -133,11 +123,11 @@ class Entity extends \F3\BghObjects\Lib\Model\SimpleEntity implements \F3\BghObj
     {
         if (!$this->isAutoCommit())
         {
-            if (!is_array($this->_uncommitedBean))
+            if (!is_array($this->uncommitedBean))
             {
-                $this->_uncommitedBean = array();
+                $this->uncommitedBean = array();
             }
-            $this->_uncommitedBean[$name] = $value;
+            $this->uncommitedBean[$name] = $value;
         }
         else
         {
@@ -151,14 +141,14 @@ class Entity extends \F3\BghObjects\Lib\Model\SimpleEntity implements \F3\BghObj
      */
     public function commit()
     {
-        if (is_array($this->_uncommitedBean))
+        if (is_array($this->uncommitedBean))
         {
-            foreach ($this->_uncommitedBean as $key => $val)
+            foreach ($this->uncommitedBean as $key => $val)
             {
                 $name = "_$key";
                 $this->$name = $val;
             }
-            $this->_uncommitedBean = false;
+            $this->uncommitedBean = false;
         }
     }
     
@@ -167,7 +157,7 @@ class Entity extends \F3\BghObjects\Lib\Model\SimpleEntity implements \F3\BghObj
      */
     public function rollback()
     {
-        $this->_uncommitedBean = false;
+        $this->uncommitedBean = false;
     }
     
     /**
@@ -177,7 +167,7 @@ class Entity extends \F3\BghObjects\Lib\Model\SimpleEntity implements \F3\BghObj
      */
     public function setAutoCommit($flag)
     {
-        $this->_autoCommit = $flag;
+        $this->autoCommit = $flag;
         if ($flag)
         {
             $this->commit();
@@ -191,7 +181,7 @@ class Entity extends \F3\BghObjects\Lib\Model\SimpleEntity implements \F3\BghObj
      */
     public function isAutoCommit()
     {
-        return $this->_autoCommit;
+        return $this->autoCommit;
     }
     
     /**
@@ -201,7 +191,7 @@ class Entity extends \F3\BghObjects\Lib\Model\SimpleEntity implements \F3\BghObj
      */
     public function hasChanges()
     {
-        return is_array($this->_uncommitedBean);
+        return is_array($this->uncommitedBean);
     }
     
 }
