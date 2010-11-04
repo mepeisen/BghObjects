@@ -57,17 +57,12 @@ class EntityRepositoryQuery implements \F3\FLOW3\Persistence\QueryInterface
     /**
 	 * Executes the query against the backend and returns the result
 	 *
-	 * @return array The query result, an array of objects
+	 * @return \F3\FLOW3\Persistence\QueryResultInterface The query result
 	 * @api
 	 */
 	public function execute()
 	{
-	    $res = $this->query->execute();
-	    foreach ($res as $obj)
-	    {
-	        $this->storage->attach($obj);
-	    }
-	    return $res;
+	    return new \F3\BghObjects\Lib\Repository\EntityRepositoryQueryResult($this, $this->query->execute(), $this->storage);
 	}
 
 	/**
