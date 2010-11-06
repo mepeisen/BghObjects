@@ -43,6 +43,13 @@ class EntityRepositoryQuery implements \F3\FLOW3\Persistence\QueryInterface
     protected $storage;
     
     /**
+     * The object manager
+     * @var \F3\FLO3\Object\ObjectManager
+     * @inject
+     */
+    protected $objectManager;
+    
+    /**
      * Constructor
      * 
      * @param \F3\FLOW3\Persistence\QueryInterface $query
@@ -62,7 +69,7 @@ class EntityRepositoryQuery implements \F3\FLOW3\Persistence\QueryInterface
 	 */
 	public function execute()
 	{
-	    return new \F3\BghObjects\Lib\Repository\EntityRepositoryQueryResult($this, $this->query->execute(), $this->storage);
+	    return $this->objectManager->create('F3\BghObjects\Lib\Repository\EntityRepositoryQueryResult', $this, $this->query->execute(), $this->storage);
 	}
 
 	/**

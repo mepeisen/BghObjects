@@ -49,9 +49,17 @@ class EntityRepositoryQueryResult implements \F3\FLOW3\Persistence\QueryResultIn
     protected $storage;
     
     /**
+     * The object manager
+     * @var \F3\FLO3\Object\ObjectManager
+     * @inject
+     */
+    protected $objectManager;
+    
+    /**
      * Constructor
      * 
      * @param \F3\FLOW3\Persistence\QueryInterface $query
+     * @param \F3\FLOW3\Persistence\QueryResultInterface $queryResult
      * @param \SplObjectStorage $storage
      */
     public function __construct(\F3\FLOW3\Persistence\QueryInterface $query, \F3\FLOW3\Persistence\QueryResultInterface $queryResult, \SplObjectStorage $storage)
@@ -69,7 +77,7 @@ class EntityRepositoryQueryResult implements \F3\FLOW3\Persistence\QueryResultIn
 	 */
 	public function getQuery()
 	{
-	    return new \F3\BghObjects\Lib\Repository\EntityRepositoryQuery($this->queryResult->getQuery(), $this->storage);
+	    return $this->objectManager->create('F3\BghObjects\Lib\Repository\EntityRepositoryQuery', $this->queryResult->getQuery(), $this->storage);
 	}
 
 	/**
