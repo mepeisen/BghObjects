@@ -270,7 +270,7 @@ class EntityTest extends \F3\Testing\BaseTestCase
 	    $omMock->expects($this->once())->method('get')->with('reposClass')->will($this->returnValue($reposMock));
 	    $entity->_set('objectManager', $omMock);
 	    $entity->_set('repository', false);
-	    $entity->_set('repositoryClassName', false);
+	    $entity->_set('repositoryClassName', 'reposClass');
 	    $entity->__wakeup();
 	    self::assertTrue($entity->isAutoCommit());
 	}

@@ -50,7 +50,7 @@ class EntityRepositoryQueryResult implements \F3\FLOW3\Persistence\QueryResultIn
     
     /**
      * The object manager
-     * @var \F3\FLO3\Object\ObjectManager
+     * @var \F3\FLOW3\Object\ObjectManager
      * @inject
      */
     protected $objectManager;

@@ -44,7 +44,7 @@ class EntityRepositoryQuery implements \F3\FLOW3\Persistence\QueryInterface
     
     /**
      * The object manager
-     * @var \F3\FLO3\Object\ObjectManager
+     * @var \F3\FLOW3\Object\ObjectManager
      * @inject
      */
     protected $objectManager;
@@ -70,17 +70,6 @@ class EntityRepositoryQuery implements \F3\FLOW3\Persistence\QueryInterface
 	public function execute()
 	{
 	    return $this->objectManager->create('F3\BghObjects\Lib\Repository\EntityRepositoryQueryResult', $this, $this->query->execute(), $this->storage);
-	}
-
-	/**
-	 * Executes the number of matching objects for the query
-	 *
-	 * @return integer The number of matching objects
-	 * @api
-	 */
-	public function count()
-	{
-	    return $this->query->count();
 	}
 
 	/**
@@ -179,7 +168,7 @@ class EntityRepositoryQuery implements \F3\FLOW3\Persistence\QueryInterface
 	 */
 	public function logicalNot($constraint)
 	{
-	    return $this->query->logicalNot($constraint1);
+	    return $this->query->logicalNot($constraint);
 	}
 
 	/**
