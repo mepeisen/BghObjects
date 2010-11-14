@@ -256,7 +256,8 @@ class TransactionalEntityAspect
         $tx = $this->txService->get();
         if (is_object($tx))
         {
-            $key = array_pop($joinPoint->getMethodArguments());
+            $args = $joinPoint->getMethodArguments();
+            $key = array_pop($args);
             $entity = $joinPoint->getProxy();
             while (is_object($tx))
             {

@@ -40,7 +40,7 @@ abstract class EntityRepository extends \F3\BghObjects\Lib\Repository\SimpleEnti
      * Auto commit flag
      * @var boolean
      */
-    protected $autoCommit = false;
+    protected $autoCommit = true;
     
     /**
      * object manager
@@ -55,6 +55,7 @@ abstract class EntityRepository extends \F3\BghObjects\Lib\Repository\SimpleEnti
     public function __construct()
     {
         $this->objectMap = new \SplObjectStorage();
+        parent::__construct();
     }
     
     /**
@@ -62,11 +63,8 @@ abstract class EntityRepository extends \F3\BghObjects\Lib\Repository\SimpleEnti
      */
     public function commit()
     {
-        $this->objectMap->rewind();
-        while ($this->objectMap->valid())
+        foreach ($this->objectMap as $val)
         {
-            $val = $this->objectMap->key();
-            $this->objectMap->next();
             $val->commit();
         }
     }
@@ -76,11 +74,8 @@ abstract class EntityRepository extends \F3\BghObjects\Lib\Repository\SimpleEnti
      */
     public function rollback()
     {
-        $this->objectMap->rewind();
-        while ($this->objectMap->valid())
+        foreach ($this->objectMap as $val)
         {
-            $val = $this->objectMap->key();
-            $this->objectMap->next();
             $val->rollback();
         }
     }
@@ -93,11 +88,8 @@ abstract class EntityRepository extends \F3\BghObjects\Lib\Repository\SimpleEnti
     public function setAutoCommit($flag)
     {
         $this->autoCommit = $flag;
-        $this->objectMap->rewind();
-        while ($this->objectMap->valid())
+        foreach ($this->objectMap as $val)
         {
-            $val = $this->objectMap->key();
-            $this->objectMap->next();
             $val->setAutoCommit($flag);
         }
     }
@@ -119,11 +111,8 @@ abstract class EntityRepository extends \F3\BghObjects\Lib\Repository\SimpleEnti
      */
     public function hasChanges()
     {
-        $this->objectMap->rewind();
-        while ($this->objectMap->valid())
+        foreach ($this->objectMap as $val)
         {
-            $val = $this->objectMap->key();
-            $this->objectMap->next();
             if ($val->hasChanges()) return true;
         }
         return false;
